@@ -1,5 +1,6 @@
 package pl.coderslab.dish.recipeIngredient;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import pl.coderslab.dish.ingredient.Ingredient;
@@ -14,6 +15,7 @@ public class RecipeIngredient {
     private Long id;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 

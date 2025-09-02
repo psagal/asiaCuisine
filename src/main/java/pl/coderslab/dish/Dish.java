@@ -1,11 +1,13 @@
 package pl.coderslab.dish;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import pl.coderslab.dish.enums.Country;
+import pl.coderslab.dish.enums.FoodType;
 import pl.coderslab.dish.recipe.Recipe;
 import pl.coderslab.dish.taste.Taste;
+import pl.coderslab.users.User;
 
 @Entity
 @Getter
@@ -17,13 +19,16 @@ public class Dish {
     private String name;
     @OneToOne
     private Recipe recipe;
-    private String countryOfOrigin;
+    @Enumerated(EnumType.STRING)
+    private Country country;
     @OneToOne
     private Taste taste;
-    private boolean isVegetarian;
-    private boolean isUserCreated;
+    @Enumerated(EnumType.STRING)
+    private FoodType foodType;
     private String imageUrl;
-
+    private boolean isUserCreated;
+    @ManyToOne
+    private User user;
 
 
 
