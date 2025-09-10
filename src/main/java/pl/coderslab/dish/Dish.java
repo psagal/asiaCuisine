@@ -17,11 +17,11 @@ public class Dish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Recipe recipe;
     @Enumerated(EnumType.STRING)
     private Country country;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Taste taste;
     @Enumerated(EnumType.STRING)
     private FoodType foodType;

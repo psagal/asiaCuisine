@@ -1,11 +1,8 @@
-package pl.coderslab.dish.taste;
+package pl.coderslab.users;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-
 @Repository
-public interface TasteRepository extends JpaRepository<Taste, Long> {
-
+public interface UserRepository extends JpaRepository<User, Long> {
 }
-

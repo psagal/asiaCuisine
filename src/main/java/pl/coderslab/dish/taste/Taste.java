@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import pl.coderslab.dish.enums.Spiciness;
 
-import java.util.List;
 
 @Entity
 @Getter
@@ -14,7 +13,8 @@ public class Taste {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private List<String> dominantTastes;
+    @Column(length = 500)
+    private String dominantTastes;  // lista oddzielana przecinkami
     @Enumerated(EnumType.STRING)
     private Spiciness spiciness;
 
