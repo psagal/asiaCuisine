@@ -5,9 +5,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import pl.coderslab.dish.dishDTO.DishByIdDTO;
 import pl.coderslab.dish.dishDTO.DishListSimpleDTO;
+import pl.coderslab.dish.enums.Country;
+import pl.coderslab.dish.enums.FoodType;
 import pl.coderslab.dish.enums.Spiciness;
 import pl.coderslab.dish.ingredient.Ingredient;
 import pl.coderslab.dish.recipe.Recipe;
+import pl.coderslab.dish.recipe.RecipeDTO;
 import pl.coderslab.dish.recipe.RecipeService;
 import pl.coderslab.dish.taste.Taste;
 import pl.coderslab.dish.taste.TasteDTO;
@@ -46,7 +49,7 @@ public class DishService {
                 .build();
     }
 
-        // TODO Lista Szczegółowa
+        // TODO Lista Szczegółowa - czy ma miec tylko skladniki czy wszystko + skladniki ?
 
         // Detailed Dish information
     public DishByIdDTO convertToShowDishByIdDto(Dish dish) {
@@ -64,24 +67,28 @@ public class DishService {
     // ### CREATING NEW DISH
 
     @Transactional
-    public Dish addNewDish(User user, DishByIdDTO dishDto) {
+    public Dish addNewDish(Long userId, DishByIdDTO dishDto) {
         Dish dish = new Dish();
         dish.setName(dishDto.getName());
         dish.setCountry(dishDto.getCountry());
         dish.setFoodType(dishDto.getFoodType());
         dish.setImageUrl(dishDto.getImageUrl());
 
-        Recipe recipe = recipeService.convertToRecipe(dishDto.getRecipe());
+        Recipe recipe = recipeService.convertToRecipe(dishDto.getRecipe(), userId);
         dish.setRecipe(recipe);
 
         Taste taste = tasteService.convertToTaste(dishDto.getTaste());
         dish.setTaste(taste);
 
+        User user = findUserById(userId);
         dish.setUserCreated(true);
         dish.setUser(user);
 
         return dishRepository.save(dish);
     }
+
+
+
 
     // ### SHOWING INFORMATION ###
     public List<Dish> findAll() {
@@ -114,8 +121,8 @@ public class DishService {
     }
 
         //# Dynamic filtering
-    public List<DishListSimpleDTO> findFilteredDishes(String name, List<Spiciness> spiciness, List<Ingredient> ingredients, String dominantTaste) {
-        Specification<Dish> spec = Specification.unrestricted();
+    public List<DishListSimpleDTO> findFilteredDishes(String name, List<Spiciness> spiciness, List<Ingredient> ingredients, String dominantTaste, FoodType foodType, Country country) {
+        Specification<Dish> spec = Specification.unrestricted();  //TODO dodac filtr na przepisy widoczne dla tego uzytkownika
 
         if (name != null) {
             spec = spec.and(DishSpecification.dishName(name));
@@ -125,12 +132,20 @@ public class DishService {
             spec = spec.and(DishSpecification.dishSpiciness(spiciness));
         }
 
-        if (ingredients != null) {
+        if (ingredients != null && !ingredients.isEmpty()) {
             spec = spec.and(DishSpecification.hasIngredient(ingredients));
         }
 
         if (dominantTaste != null) {
             spec = spec.and(DishSpecification.dishDominantTaste(dominantTaste));
+        }
+
+        if (foodType != null) {
+            spec = spec.and(DishSpecification.dishFoodType(foodType));
+        }
+
+        if (country != null) {
+            spec = spec.and(DishSpecification.dishCountry(country));
         }
 
         return dishRepository.findAll(spec).stream().map(this::convertToStandardShowDto).collect(Collectors.toList());

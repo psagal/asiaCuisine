@@ -19,17 +19,17 @@ public class IngredientService {
     }
 
 
-    //Dodanie składnika od strony użytkownika
-    public void addIngredient(IngredientDTO ingredientInput) {
+    //Adding the ingredient by user
+    public Ingredient addIngredient(IngredientDTO ingredientInput, Long userId) {
         Ingredient ingredient = new Ingredient();
         ingredient.setName(ingredientInput.getName());
         ingredient.setCategory(ingredientInput.getCategory());
         ingredient.setUserCreated(true);
-        ingredient.setUser(userService.findById(1L));
-        ingredientRepository.save(ingredient);
+        ingredient.setUser(userService.findById(userId));
+        return ingredientRepository.save(ingredient);
     }
 
-    // TU WYSWIETLAC TYLKO TE KTORE MOZE WiDZIEC UZYTKOWNIK
+    // Showing all ingredients available for User
     public List<IngredientDTO> getAllIngredients(User user) {
         List<Ingredient> ingredients = ingredientRepository.findAllByIsUserCreatedFalse();
         ingredients.addAll(ingredientRepository.findAllByUser(user));
@@ -39,6 +39,11 @@ public class IngredientService {
                         .category(ingredient.getCategory())
                         .build()
         ).toList();
+    }
+
+    // Searching the ingredient through name
+    public Ingredient findIngredientByName(String name, Long userId) {
+        return ingredientRepository.findByNameIgnoreCase(name, userId);
     }
 
     //WYSWIETLIC SKLADNIKI UZYTKOWNIKA

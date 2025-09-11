@@ -5,6 +5,7 @@ import pl.coderslab.dish.ingredient.Ingredient;
 import pl.coderslab.dish.ingredient.IngredientRepository;
 import pl.coderslab.dish.ingredient.IngredientService;
 import pl.coderslab.dish.recipeIngredient.RecipeIngredient;
+import pl.coderslab.dish.recipeIngredient.RecipeIngredientDTO;
 import pl.coderslab.dish.recipeIngredient.RecipeIngredientService;
 import pl.coderslab.exceptions.IngredientNotFoundException;
 
@@ -35,8 +36,9 @@ public class RecipeService {
                 .build();
     }
 
+
     // Mapping from DTO
-    public Recipe convertToRecipe(RecipeDTO recipeDTO) {
+    public Recipe convertToRecipe(RecipeDTO recipeDTO, Long userId) {
         Recipe recipe = new Recipe();
         recipe.setDifficulty(recipeDTO.getDifficulty());
         recipe.setDescription(recipeDTO.getDescription());
@@ -45,7 +47,8 @@ public class RecipeService {
         List<RecipeIngredient> recipeIngredients = new ArrayList<>();
 
         recipeDTO.getRecipeIngredients().stream().forEach(recipeIngredientDTO -> {
-            Ingredient ingredient = ingredientRepository.findByNameIgnoreCase(recipeIngredientDTO.getName());
+            // Is Ingredient in the database
+            Ingredient ingredient = ingredientRepository.findByNameIgnoreCase(recipeIngredientDTO.getName(),userId);
             if (ingredient == null) {
                 throw new IngredientNotFoundException("Ingredient not found: " + recipeIngredientDTO.getName());
             }

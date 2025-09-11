@@ -2,6 +2,8 @@ package pl.coderslab.dish;
 
 import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
+import pl.coderslab.dish.enums.Country;
+import pl.coderslab.dish.enums.FoodType;
 import pl.coderslab.dish.enums.Spiciness;
 import pl.coderslab.dish.ingredient.Ingredient;
 import pl.coderslab.dish.recipe.Recipe;
@@ -24,7 +26,11 @@ public class DishSpecification {
     }
 
     public static Specification<Dish> dishDominantTaste(String dominantTaste) {
-        return (root, query, builder) -> builder.isMember(dominantTaste, root.get("dominantTaste").toString().split(","));
+        return (root, query, builder) -> {
+            Join<Dish, Taste> tasteJoin = root.join("taste");
+            Join<Taste, String> dominantList = tasteJoin.join("dominantTastes");
+            return builder.equal(builder.lower(dominantList), dominantTaste.toLowerCase());
+        };
     }
 
     public static Specification<Dish> hasIngredient(List<Ingredient> ingredients) {
@@ -34,7 +40,15 @@ public class DishSpecification {
             Join<Dish, Recipe> recipeJoin = root.join("recipe");
             Join<Recipe, RecipeIngredient> recipeIngredientJoin = recipeJoin.join("recipeIngredients");
             Join<RecipeIngredient, Ingredient> ingredientJoin = recipeIngredientJoin.join("ingredient");
-            return ingredientJoin.get("name").in(ingredients);
+            return ingredientJoin.in(ingredients);
         };
+    }
+
+    public static Specification<Dish> dishFoodType(FoodType foodType) {
+        return (root, query, builder) -> builder.equal(root.get("foodType"), foodType);
+    }
+
+    public static Specification<Dish> dishCountry(Country country) {
+        return (root, query, builder) -> builder.equal(root.get("country"), country);
     }
 }
