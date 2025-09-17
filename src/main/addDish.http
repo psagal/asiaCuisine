@@ -3,7 +3,7 @@ POST http://localhost:8080/create-dish/step1
 Content-Type: application/json
 
 {
-  "name": "Pad Thai",
+  "name": "Milk Pad Thai",
   "country": "THAILAND",
   "foodType": "GLUTEN_FREE",
   "imageUrl": "https://example.com/padthai.jpg"
@@ -14,7 +14,7 @@ POST http://localhost:8080/create-dish/step2
 Content-Type: application/json
 
 {
-  "spiciness": "HOT",
+  "spiciness": "MILD",
   "dominantTastes": ["SAVORY","SWEET","SPICY"]
 }
 
@@ -24,7 +24,7 @@ Content-Type: application/json
 
 {
   "ingredients": [
-    { "name": "Egg", "amount": 200, "unit": "g" },
+    { "name": "Milk", "amount": 200, "unit": "ml" },
     { "name": "Shrimp", "amount": 150, "unit": "g" }
   ]
 }

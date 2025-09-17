@@ -23,7 +23,7 @@ public interface DishRepository extends JpaRepository<Dish, Long>, JpaSpecificat
     Optional <Dish> findDishById(Long id, Long userId);
 
     @Query("SELECT d FROM Dish d WHERE d.id = :dishId AND d.isUserCreated = true AND d.user.id = :userId")
-    Optional <Dish> findDishToDelete(Long dishId, Long userId);
+    Optional <Dish> findDishToDeleteOrUpdate(Long dishId, Long userId);
 
 
 }

@@ -1,0 +1,61 @@
+### UPDATE dish to Hotteok
+PUT http://localhost:8080/dish/update/20
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Hotteok",
+  "country": "KOREA",
+  "foodType": "VEGETARIAN",
+  "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Hotteok_in_Korea.jpg/640px-Hotteok_in_Korea.jpg",
+  "recipe": {
+    "difficulty": 2,
+    "description": "Dough filled with brown sugar, cinnamon, and nuts, pan-fried until golden brown.",
+    "videoUrl": "https://www.youtube.com/watch?v=abc123xyz",
+    "recipeIngredients": [
+      { "name": "Wheat flour", "amount": 300, "unit": "g" },
+      { "name": "Egg", "amount": 3, "unit": "pcs" },
+      { "name": "Sugar", "amount": 30, "unit": "g" }
+
+    ]
+  },
+  "taste": {
+    "dominantTastes": ["SWEET", "NUTTY", "SPICY"],
+    "spiciness": "MILD"
+  }
+}
+
+### UPDATE dish to Hotteok
+PUT http://localhost:8080/dish/update/20
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Hotteok",
+  "country": "KOREA",
+  "foodType": "VEGETARIAN",
+  "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Hotteok_in_Korea.jpg/640px-Hotteok_in_Korea.jpg",
+  "recipe": {
+    "difficulty": 2,
+    "description": "Description pending",
+    "videoUrl": "https://www.youtube.com/watch?v=abc123xyz"
+
+  },
+  "taste": {
+    "dominantTastes": ["SWEET", "NUTTY", "SPICY"],
+    "spiciness": "MILD"
+  }
+}
+
+### UPDATE dish to Hotteok
+PUT http://localhost:8080/dish/update/20
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Hotteok",
+  "country": "KOREA",
+  "foodType": "VEGETARIAN",
+  "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Hotteok_in_Korea.jpg/640px-Hotteok_in_Korea.jpg"
+
+}

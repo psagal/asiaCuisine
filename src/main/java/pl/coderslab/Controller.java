@@ -1,5 +1,6 @@
 package pl.coderslab;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +14,11 @@ import pl.coderslab.dish.enums.Spiciness;
 import pl.coderslab.dish.ingredient.Ingredient;
 import pl.coderslab.dish.ingredient.IngredientDTO;
 import pl.coderslab.dish.ingredient.IngredientService;
+import pl.coderslab.dish.recipe.RecipeDTO;
 import pl.coderslab.dish.recipe.RecipeService;
 import pl.coderslab.dish.recipeIngredient.RecipeIngredientDTO;
 import pl.coderslab.dish.recipeIngredient.RecipeIngredientService;
+import pl.coderslab.dish.taste.TasteDTO;
 import pl.coderslab.dish.taste.TasteService;
 import pl.coderslab.exceptions.IngredientNotFoundException;
 import pl.coderslab.users.User;
@@ -74,7 +77,8 @@ public class Controller {
             ingredients.stream()
                     .map(String::toLowerCase)
                     .forEach(i -> {
-                        ingredientsList.add(ingredientService.findIngredientByName(i, USER_ID).orElseThrow(() -> new IngredientNotFoundException("Ingredient " + i + " not found")));
+                        ingredientsList.add(ingredientService.findIngredientByName(i, USER_ID)
+                                .orElseThrow(() -> new IngredientNotFoundException("Ingredient " + i + " not found")));
                     });
         }
         return dishService.findFilteredDishes(name, spice, ingredientsList, taste, foodType, country, difficulty, USER_ID);
@@ -90,11 +94,25 @@ public class Controller {
         return dishService.findDishWithName(name, USER_ID);
     }
 
+    @GetMapping("/dish/random")
+    public DishByIdDTO getRandomDish(){
+        return dishService.randomDish();
+    }
+
     // Dish deleting
-    @DeleteMapping("dish/{id}/delete")
+    @DeleteMapping("dish/delete/{id}")
     public ResponseEntity<?> deleteDish(@PathVariable Long id){
         dishService.deleteDish(id, USER_ID);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK).body("Dish deleted");
+    }
+
+    // Dish updating
+    @PutMapping("dish/update/{id}")
+    public ResponseEntity<?> updateDish(@PathVariable Long id,
+                                        @RequestBody DishByIdDTO dishUpdateDTO
+                                        ) {
+        dishService.updateDish(id, USER_ID, dishUpdateDTO.getName(), dishUpdateDTO.getCountry(), dishUpdateDTO.getFoodType(), dishUpdateDTO.getImageUrl(), dishUpdateDTO.getRecipe(), dishUpdateDTO.getTaste());
+        return ResponseEntity.status(HttpStatus.OK).body("Dish updated");
     }
 
     //all ingredients that user can display
@@ -112,6 +130,25 @@ public class Controller {
         return ResponseEntity.status(HttpStatus.CREATED).body(newIngredient);
     }
 
+    @DeleteMapping("/ingredients/delete/{id}")
+    public ResponseEntity<?> deleteIngredient(@PathVariable Long id){
+
+        try {
+            ingredientService.deleteIngredient(id, USER_ID);
+            return ResponseEntity.status(HttpStatus.OK).body("Ingredient deleted");
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Cannot delete ingredient. Ingredient is assigned to existing recipe.");
+        }
+    }
+
+    @PutMapping("/ingredients/update/{id}")
+    public ResponseEntity<?> updateIngredient(@PathVariable Long id, @RequestBody IngredientDTO ingredientData) {
+        ingredientService.updateIngredient(ingredientData, id, USER_ID);
+        return ResponseEntity.status(HttpStatus.OK).body("Ingredient updated");
+    }
+
+    // showing all ingredients for chosen dish (from the list)
     @GetMapping("/ingrediets/{dish_id}")
     public List<RecipeIngredientDTO> getIngredientsByDishId(@PathVariable Long dish_id) {
         return dishService.getAllDishIngredients(dish_id, USER_ID);

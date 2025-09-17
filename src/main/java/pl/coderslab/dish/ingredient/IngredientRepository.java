@@ -19,4 +19,8 @@ public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
 
     @Query("SELECT i FROM Ingredient i WHERE LOWER( i.name) = LOWER( :name ) AND (i.isUserCreated = FALSE OR i.user.id = :userId )")
     Optional <Ingredient> findByNameIgnoreCase(String name, Long userId);
+
+    @Query("SELECT i FROM Ingredient i WHERE i.id = :ingredientId AND i.isUserCreated = true AND i.user.id = :userId")
+    Optional <Ingredient> findIngredientToDeleteOrUpdate(Long ingredientId, Long userId);
+
 }

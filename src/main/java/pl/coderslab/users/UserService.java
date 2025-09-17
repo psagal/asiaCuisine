@@ -1,6 +1,7 @@
 package pl.coderslab.users;
 
 import org.springframework.stereotype.Service;
+import pl.coderslab.exceptions.UserNotFoundException;
 
 @Service
 public class UserService {
@@ -9,8 +10,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    // TODO CO JESLI NIE BEDZIE TAKIEGO ID?????
     public User findById(Long id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User " + id + " not found"));
     }
 }

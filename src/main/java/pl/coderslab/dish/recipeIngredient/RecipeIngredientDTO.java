@@ -1,6 +1,5 @@
 package pl.coderslab.dish.recipeIngredient;
 import lombok.*;
-import pl.coderslab.dish.ingredient.IngredientDTO;
 
 @Builder
 @Getter

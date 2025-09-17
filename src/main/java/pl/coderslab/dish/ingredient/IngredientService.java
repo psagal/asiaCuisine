@@ -1,5 +1,6 @@
 package pl.coderslab.dish.ingredient;
 
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -26,6 +27,7 @@ public class IngredientService {
 
 
     //Adding the ingredient by user ( + checking if it already exists )
+    @Transactional
     @ResponseStatus(HttpStatus.CREATED)
     public Ingredient addIngredient(IngredientDTO ingredientInput, Long userId) {
         User user = userService.findById(userId);
@@ -38,6 +40,26 @@ public class IngredientService {
         ingredient.setUserCreated(true);
         ingredient.setUser(user);
         return ingredientRepository.save(ingredient);
+    }
+
+    // Deleting the ingredient created by User
+    @Transactional
+    public void deleteIngredient(Long ingredientId, Long userId) {
+        Ingredient ingredient = ingredientRepository.findIngredientToDeleteOrUpdate(ingredientId, userId).orElseThrow(() -> new IngredientNotFoundException("Ingredient can not be deleted or doesn't exist"));
+        ingredientRepository.delete(ingredient);
+    }
+
+    // Updating the ingredient created by user (button next to the ingredient )
+    @Transactional
+    public void updateIngredient(IngredientDTO ingredientInput,Long ingredientId, Long userId) {
+        Ingredient ingredient = ingredientRepository.findIngredientToDeleteOrUpdate(ingredientId, userId).orElseThrow(() -> new IngredientNotFoundException("Ingredient can not be updated or doesn't exist"));
+        if (ingredientInput.getName() != null) {
+            ingredient.setName(ingredientInput.getName());
+        }
+        if (ingredientInput.getCategory() != null) {
+            ingredient.setCategory(ingredientInput.getCategory());
+        }
+        ingredientRepository.save(ingredient);
     }
 
     // Mapping to DTO

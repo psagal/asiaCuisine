@@ -3,6 +3,7 @@ package pl.coderslab.dish.recipeIngredient;
 import org.springframework.stereotype.Service;
 import pl.coderslab.dish.ingredient.IngredientService;
 import pl.coderslab.dish.recipe.Recipe;
+import pl.coderslab.exceptions.IngredientNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,14 +26,14 @@ public class RecipeIngredientService {
                 .build();
     }
 
-//    public RecipeIngredient convertToEntity(RecipeIngredientDTO recipeIngredientDTO, Recipe recipe, Long userId) {
-//        RecipeIngredient recipeIngredient = new RecipeIngredient();
-//        recipeIngredient.setIngredient( ingredientService.findIngredientByName(recipeIngredientDTO.getName(),userId));
-//        recipeIngredient.setAmount(recipeIngredientDTO.getAmount());
-//        recipeIngredient.setUnit(recipeIngredientDTO.getUnit());
-//        recipeIngredient.setRecipe(recipe);
-//        return recipeIngredient;
-//    }
+    public RecipeIngredient convertToEntity(RecipeIngredientDTO recipeIngredientDTO, Recipe recipe, Long userId) {
+        RecipeIngredient recipeIngredient = new RecipeIngredient();
+        recipeIngredient.setIngredient( ingredientService.findIngredientByName(recipeIngredientDTO.getName(),userId).orElseThrow(() -> new IngredientNotFoundException(recipeIngredientDTO.getName() + " not found")));
+        recipeIngredient.setAmount(recipeIngredientDTO.getAmount());
+        recipeIngredient.setUnit(recipeIngredientDTO.getUnit());
+        recipeIngredient.setRecipe(recipe);
+        return recipeIngredient;
+    }
 
 
 
@@ -45,6 +46,8 @@ public class RecipeIngredientService {
         List<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findAllByRecipe(recipe);
         return convertToListDTO(recipeIngredients);
     }
+
+
 
 
 //    public RecipeIngredientDTO makeRecipeIngredientDTO(String name, String unit, Double amount ) {

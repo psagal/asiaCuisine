@@ -9,10 +9,10 @@ import pl.coderslab.dish.enums.Country;
 import pl.coderslab.dish.enums.FoodType;
 import pl.coderslab.dish.enums.Spiciness;
 import pl.coderslab.dish.ingredient.Ingredient;
-import pl.coderslab.dish.ingredient.IngredientDTO;
 import pl.coderslab.dish.recipe.Recipe;
 import pl.coderslab.dish.recipe.RecipeDTO;
 import pl.coderslab.dish.recipe.RecipeService;
+import pl.coderslab.dish.recipeIngredient.RecipeIngredient;
 import pl.coderslab.dish.recipeIngredient.RecipeIngredientDTO;
 import pl.coderslab.dish.recipeIngredient.RecipeIngredientService;
 import pl.coderslab.dish.taste.Taste;
@@ -24,7 +24,9 @@ import pl.coderslab.users.User;
 import pl.coderslab.users.UserRepository;
 
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -93,12 +95,60 @@ public class DishService {
     }
 
 
-    // ### Deleting users dish
+    // ### Deleting user's dish
     @Transactional
     public void deleteDish(Long dishId, Long userId) {
-        Dish dish = dishRepository.findDishToDelete(dishId, userId).orElseThrow(() -> new DishNotFoundException("Dish can not be deleted"));
+        Dish dish = dishRepository.findDishToDeleteOrUpdate(dishId, userId).orElseThrow(() -> new DishNotFoundException("Dish can not be deleted or it doesn't exist"));
         dishRepository.delete(dish);
     }
+
+    // ### Updating user's dish
+    @Transactional
+    public void updateDish(Long dishId, Long userId, String name, Country country, FoodType foodType, String imageUrl, RecipeDTO recipeDTO, TasteDTO tasteDTO) {
+        Dish dish = dishRepository.findDishToDeleteOrUpdate(dishId, userId).orElseThrow(() -> new DishNotFoundException("Dish can not be updated or it doesn't exist"));
+        if(name != null) {
+            dish.setName(name);
+        }
+        if(country != null) {
+            dish.setCountry(country);
+        }
+        if(foodType != null) {
+            dish.setFoodType(foodType);
+        }
+        if(imageUrl != null) {
+            dish.setImageUrl(imageUrl);
+        }
+        if(recipeDTO != null) {
+            if(recipeDTO.getDifficulty() != 0){
+                dish.getRecipe().setDifficulty(recipeDTO.getDifficulty());
+            }
+            if(recipeDTO.getDescription() != null){
+                dish.getRecipe().setDescription(recipeDTO.getDescription());
+            }
+            if (recipeDTO.getVideoUrl() != null){
+                dish.getRecipe().setVideoUrl(recipeDTO.getVideoUrl());
+            }
+            if(recipeDTO.getRecipeIngredients() != null){
+                List<RecipeIngredient> ingredients = dish.getRecipe().getRecipeIngredients();
+                ingredients.clear();
+
+                recipeDTO.getRecipeIngredients().forEach(elementDTO -> {
+                    ingredients.add(recipeIngredientService.convertToEntity(elementDTO, dish.getRecipe(), userId));
+                });
+                dish.getRecipe().setRecipeIngredients(ingredients);
+            }
+        }
+        if (tasteDTO != null) {
+            if(tasteDTO.getDominantTastes() != null){
+                dish.getTaste().setDominantTastes(tasteDTO.getDominantTastes());
+            }
+            if(tasteDTO.getSpiciness() != null){
+                dish.getTaste().setSpiciness(tasteDTO.getSpiciness());
+            }
+        }
+        dishRepository.save(dish);
+    }
+
 
     // ### SHOWING INFORMATION ###
     public List<Dish> findAll() {
@@ -172,13 +222,26 @@ public class DishService {
         return convertToShowDishByIdDto(dish);
     }
 
+    // Show Random dish from base recipes
+    public DishByIdDTO randomDish(){
+        Dish dish = dishRepository.findDishById(randomBaseDishId(), null).orElseThrow(()-> new DishNotFoundException("Dish not found") );
+        return convertToShowDishByIdDto(dish);
+    }
 
 
-    // ### metody pomocnicze ###
+    // ### other  ###
     public User findUserById(Long userId) {
         if (userId == null || userId <= 0) {
             throw new UserNotFoundException("User is not logged in");
         }
         return userRepository.findById(userId).orElseThrow( () -> new UserNotFoundException("User not found"));
+    }
+
+    public Long randomBaseDishId(){
+        List<Long> ids = new ArrayList<>();
+        findAll().forEach(dish -> {ids.add(dish.getId()); });
+
+        Random random = new Random();
+        return ids.get(random.nextInt(ids.size()));
     }
 }
