@@ -115,6 +115,17 @@ public class Controller {
         return ResponseEntity.status(HttpStatus.OK).body("Dish updated");
     }
 
+    // Dish favourites add / delete
+
+    @PutMapping("dish/favourite/add/{id}")
+    public ResponseEntity<?> addFavouriteDish(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(dishService.addToFavourites(id, USER_ID));
+    }
+
+    @PutMapping("/dish/favourite/delete/{id}")
+    public ResponseEntity<?> removeFavouriteDish(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(dishService.removeFromFavourites(id, USER_ID));
+    }
     //all ingredients that user can display
     @GetMapping("/ingredients")
     public List<IngredientDTO> getIngredients() {

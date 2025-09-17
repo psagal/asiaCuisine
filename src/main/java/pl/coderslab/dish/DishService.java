@@ -99,6 +99,8 @@ public class DishService {
     @Transactional
     public void deleteDish(Long dishId, Long userId) {
         Dish dish = dishRepository.findDishToDeleteOrUpdate(dishId, userId).orElseThrow(() -> new DishNotFoundException("Dish can not be deleted or it doesn't exist"));
+        User user = findUserById(userId);
+        user.getFavouriteDishes().removeIf(d -> d.getId().equals(dishId));
         dishRepository.delete(dish);
     }
 
@@ -149,6 +151,37 @@ public class DishService {
         dishRepository.save(dish);
     }
 
+    // ### Favourite dishes
+    //Adding to favourites
+    public String addToFavourites(Long dishId, Long userId) {
+        User user = findUserById(userId);
+        List<Dish> favourites = user.getFavouriteDishes();
+        for(Dish favourite : favourites){
+            if(favourite.getId() == dishId){
+                return "dish already added to favourites";
+            }
+        }
+
+        Dish dish = dishRepository.findDishById(dishId, userId).orElseThrow(() -> new DishNotFoundException("Dish not found"));
+        favourites.add(dish);
+        userRepository.save(user);
+        return "dish added to favourites";
+    }
+
+    //Deleting from favourites
+    public String removeFromFavourites(Long dishId, Long userId) {
+        User user = findUserById(userId);
+        List<Dish> favourites = user.getFavouriteDishes();
+        for(Dish favourite : favourites){
+            if(favourite.getId() == dishId){
+                favourites.remove(favourite);
+                userRepository.save(user);
+                return "dish removed from favourites";
+            }
+        }
+        return "dish not found at favourites list";
+
+    }
 
     // ### SHOWING INFORMATION ###
     public List<Dish> findAll() {
@@ -239,7 +272,7 @@ public class DishService {
 
     public Long randomBaseDishId(){
         List<Long> ids = new ArrayList<>();
-        findAll().forEach(dish -> {ids.add(dish.getId()); });
+        findAll().forEach(dish -> ids.add(dish.getId()));
 
         Random random = new Random();
         return ids.get(random.nextInt(ids.size()));
