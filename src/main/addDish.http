@@ -1,0 +1,41 @@
+### Step 1
+POST http://localhost:8080/create-dish/step1
+Content-Type: application/json
+
+{
+  "name": "Pad Thai",
+  "country": "THAILAND",
+  "foodType": "GLUTEN_FREE",
+  "imageUrl": "https://example.com/padthai.jpg"
+}
+
+### Step 2
+POST http://localhost:8080/create-dish/step2
+Content-Type: application/json
+
+{
+  "spiciness": "HOT",
+  "dominantTastes": ["SAVORY","SWEET","SPICY"]
+}
+
+### Step 3
+POST http://localhost:8080/create-dish/step3
+Content-Type: application/json
+
+{
+  "ingredients": [
+    { "name": "Egg", "amount": 200, "unit": "g" },
+    { "name": "Shrimp", "amount": 150, "unit": "g" }
+  ]
+}
+
+### Step 4
+POST http://localhost:8080/create-dish/step4
+Content-Type: application/json
+
+{
+  "description": "Soak noodles, stir-fry shrimp, add sauce and serve.",
+  "difficulty": 2,
+  "videoUrl": "https://example.com/padthai.mp4"
+}
+

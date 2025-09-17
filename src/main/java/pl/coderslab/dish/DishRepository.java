@@ -3,11 +3,10 @@ package pl.coderslab.dish;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import pl.coderslab.dish.enums.Spiciness;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DishRepository extends JpaRepository<Dish, Long>, JpaSpecificationExecutor<Dish> {
@@ -17,19 +16,14 @@ public interface DishRepository extends JpaRepository<Dish, Long>, JpaSpecificat
 
     List<Dish> findAllByUser_Id(Long id);
 
-    // ### BY TASTE ###
-        // filtering by chosen spiciness levels
-        // TODO: metoda w serwisie
-    @Query("SELECT d FROM Dish d WHERE d.taste.spiciness IN :spiciness")
-    List<Dish> findAllByTaste_Spiciness(@Param("spiciness") List<Spiciness> spiciness);
+    @Query(" SELECT d FROM Dish d WHERE LOWER( d.name) = LOWER( :name ) AND ((d.isUserCreated = FALSE OR d.user.id = :userId ))")
+    Optional <Dish> findDishByNameIgnoreCase(String name, Long userId);
 
-        /*
-    // filtering by one chosen dominant Taste
-        // TODO: metoda w serwisie z ignoreCase i co jeśli brak takiego dania
-    @Query("SELECT d FROM Dish d WHERE :dominantTaste MEMBER OF d.taste.dominantTastes")
-    List<Dish> findAllByTaste_DominantTaste(String dominantTaste);
+    @Query(" SELECT d FROM Dish d WHERE d.id = :id AND ((d.isUserCreated = FALSE OR d.user.id = :userId ))")
+    Optional <Dish> findDishById(Long id, Long userId);
 
+    @Query("SELECT d FROM Dish d WHERE d.id = :dishId AND d.isUserCreated = true AND d.user.id = :userId")
+    Optional <Dish> findDishToDelete(Long dishId, Long userId);
 
-         */
 
 }

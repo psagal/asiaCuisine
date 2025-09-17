@@ -14,6 +14,10 @@ import java.util.List;
 
 public class DishSpecification {
 
+    public static Specification<Dish> allForUser(Long userId) {
+        return ((root, query, builder) ->
+                builder.or(builder.isFalse(root.get("isUserCreated")),builder.equal(root.get("user").get("id"), userId)));
+    }
     public static Specification<Dish> dishName(String name) {
         return (root, query, builder) -> builder.like(root.get("name"), "%" + name + "%");
     }
@@ -50,5 +54,12 @@ public class DishSpecification {
 
     public static Specification<Dish> dishCountry(Country country) {
         return (root, query, builder) -> builder.equal(root.get("country"), country);
+    }
+
+    public static  Specification<Dish> dishMaxDifficulty(Integer difficulty) {
+        return (root, query, builder) -> {
+            Join<Dish, Recipe> recipeJoin = root.join("recipe");
+            return builder.lessThanOrEqualTo(recipeJoin.get("difficulty"), difficulty);
+        };
     }
 }

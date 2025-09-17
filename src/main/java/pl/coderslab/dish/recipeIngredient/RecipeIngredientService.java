@@ -25,14 +25,14 @@ public class RecipeIngredientService {
                 .build();
     }
 
-    public RecipeIngredient convertToEntity(RecipeIngredientDTO recipeIngredientDTO, Recipe recipe, Long userId) {
-        RecipeIngredient recipeIngredient = new RecipeIngredient();
-        recipeIngredient.setIngredient( ingredientService.findIngredientByName(recipeIngredientDTO.getName(),userId));
-        recipeIngredient.setAmount(recipeIngredientDTO.getAmount());
-        recipeIngredient.setUnit(recipeIngredientDTO.getUnit());
-        recipeIngredient.setRecipe(recipe);
-        return recipeIngredient;
-    }
+//    public RecipeIngredient convertToEntity(RecipeIngredientDTO recipeIngredientDTO, Recipe recipe, Long userId) {
+//        RecipeIngredient recipeIngredient = new RecipeIngredient();
+//        recipeIngredient.setIngredient( ingredientService.findIngredientByName(recipeIngredientDTO.getName(),userId));
+//        recipeIngredient.setAmount(recipeIngredientDTO.getAmount());
+//        recipeIngredient.setUnit(recipeIngredientDTO.getUnit());
+//        recipeIngredient.setRecipe(recipe);
+//        return recipeIngredient;
+//    }
 
 
 
@@ -41,11 +41,17 @@ public class RecipeIngredientService {
                 .map(this::convertToDTO).toList();
     }
 
-    public RecipeIngredientDTO makeRecipeIngredientDTO(String name, String unit, Double amount ) {
-        RecipeIngredientDTO recipeIngredientDTO = new RecipeIngredientDTO();
-        recipeIngredientDTO.setName(name);
-        recipeIngredientDTO.setUnit(unit);
-        recipeIngredientDTO.setAmount(amount);
-        return recipeIngredientDTO;
+    public List<RecipeIngredientDTO> getAllRecipeIngredients(Recipe recipe) {
+        List<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findAllByRecipe(recipe);
+        return convertToListDTO(recipeIngredients);
     }
+
+
+//    public RecipeIngredientDTO makeRecipeIngredientDTO(String name, String unit, Double amount ) {
+//        RecipeIngredientDTO recipeIngredientDTO = new RecipeIngredientDTO();
+//        recipeIngredientDTO.setName(name);
+//        recipeIngredientDTO.setUnit(unit);
+//        recipeIngredientDTO.setAmount(amount);
+//        return recipeIngredientDTO;
+//    }
 }

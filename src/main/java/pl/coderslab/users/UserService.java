@@ -9,7 +9,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    // CO JESLI NIE BEDZIE TAKIEGO ID?????
+    // TODO CO JESLI NIE BEDZIE TAKIEGO ID?????
     public User findById(Long id) {
         return userRepository.findById(id).orElse(null);
     }

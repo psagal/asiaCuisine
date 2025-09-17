@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class AsiaCuisineApplication {
 
     public static void main(String[] args) {
+
         SpringApplication.run(AsiaCuisineApplication.class, args);
     }
 

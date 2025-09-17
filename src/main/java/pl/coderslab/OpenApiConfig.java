@@ -13,7 +13,7 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .components(new Components())
                 .info(new Info().title("Asia Cuisine API").description(
-                                "Find your ideal recipe")
+                                "Final project")
                         .version("1.0"));
     }
 }

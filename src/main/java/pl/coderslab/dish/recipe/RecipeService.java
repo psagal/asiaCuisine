@@ -11,6 +11,7 @@ import pl.coderslab.exceptions.IngredientNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RecipeService {
@@ -48,10 +49,10 @@ public class RecipeService {
 
         recipeDTO.getRecipeIngredients().stream().forEach(recipeIngredientDTO -> {
             // Is Ingredient in the database
-            Ingredient ingredient = ingredientRepository.findByNameIgnoreCase(recipeIngredientDTO.getName(),userId);
-            if (ingredient == null) {
-                throw new IngredientNotFoundException("Ingredient not found: " + recipeIngredientDTO.getName());
-            }
+            Ingredient ingredient = ingredientRepository
+                    .findByNameIgnoreCase(recipeIngredientDTO.getName(),userId)
+                    .orElseThrow(() -> new IngredientNotFoundException("Ingredient not found: " + recipeIngredientDTO.getName()) );
+
 
             RecipeIngredient recipeIngredient = new RecipeIngredient();
             recipeIngredient.setIngredient(ingredient);
@@ -65,9 +66,9 @@ public class RecipeService {
         return recipe;
     }
 
-    //  WYSWIETLIC PRZEPIS O DANYM ID
+    //TODO WYSWIETLIC PRZEPIS O DANYM ID
 
-    //WYSWIETLIC SKLADNIKI DO DANEGO PRZEPISU
+    //TODO WYSWIETLIC SKLADNIKI DO DANEGO PRZEPISU
 
 
 }

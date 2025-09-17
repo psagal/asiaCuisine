@@ -9,12 +9,16 @@ import pl.coderslab.dish.enums.Country;
 import pl.coderslab.dish.enums.FoodType;
 import pl.coderslab.dish.enums.Spiciness;
 import pl.coderslab.dish.ingredient.Ingredient;
+import pl.coderslab.dish.ingredient.IngredientDTO;
 import pl.coderslab.dish.recipe.Recipe;
 import pl.coderslab.dish.recipe.RecipeDTO;
 import pl.coderslab.dish.recipe.RecipeService;
+import pl.coderslab.dish.recipeIngredient.RecipeIngredientDTO;
+import pl.coderslab.dish.recipeIngredient.RecipeIngredientService;
 import pl.coderslab.dish.taste.Taste;
 import pl.coderslab.dish.taste.TasteDTO;
 import pl.coderslab.dish.taste.TasteService;
+import pl.coderslab.exceptions.DishNotFoundException;
 import pl.coderslab.exceptions.UserNotFoundException;
 import pl.coderslab.users.User;
 import pl.coderslab.users.UserRepository;
@@ -29,16 +33,18 @@ public class DishService {
     private final UserRepository userRepository;
     private final TasteService tasteService;
     private final RecipeService recipeService;
+    private final RecipeIngredientService recipeIngredientService;
 
-    public DishService(DishRepository dishRepository, UserRepository userRepository, TasteService tasteService, RecipeService recipeService) {
+    public DishService(DishRepository dishRepository, UserRepository userRepository, TasteService tasteService, RecipeService recipeService, RecipeIngredientService recipeIngredientService) {
         this.dishRepository = dishRepository;
         this.userRepository = userRepository;
         this.tasteService = tasteService;
         this.recipeService = recipeService;
+        this.recipeIngredientService = recipeIngredientService;
     }
 
     // ### DTO Mapping ###
-        // Simple List of Dishes
+        // DTO for Simple List of Dishes
     public DishListSimpleDTO convertToStandardShowDto(Dish dish) {
         return DishListSimpleDTO.builder()
                 .name(dish.getName())
@@ -49,7 +55,6 @@ public class DishService {
                 .build();
     }
 
-        // TODO Lista Szczegółowa - czy ma miec tylko skladniki czy wszystko + skladniki ?
 
         // Detailed Dish information
     public DishByIdDTO convertToShowDishByIdDto(Dish dish) {
@@ -88,10 +93,16 @@ public class DishService {
     }
 
 
-
+    // ### Deleting users dish
+    @Transactional
+    public void deleteDish(Long dishId, Long userId) {
+        Dish dish = dishRepository.findDishToDelete(dishId, userId).orElseThrow(() -> new DishNotFoundException("Dish can not be deleted"));
+        dishRepository.delete(dish);
+    }
 
     // ### SHOWING INFORMATION ###
     public List<Dish> findAll() {
+
         return dishRepository.findAllByIsUserCreatedFalse();
     }
 
@@ -106,23 +117,18 @@ public class DishService {
         return dishRepository.findAllByUser_Id(userId).stream()
                 .map(this::convertToStandardShowDto).collect(Collectors.toList());
     }
-        /*
-        // Taste Related Dishes
-    public List<DishListSimpleDTO> findDishesByTasteDominant(String dominantTaste) {
-        return dishRepository.findAllByTaste_DominantTaste(dominantTaste.toLowerCase()).stream()
-                .map(this::convertToStandardShowDto).collect(Collectors.toList());
+
+    // Ingredients for the specified Dish
+    public List<RecipeIngredientDTO> getAllDishIngredients(Long dishId, Long userId) {
+        Dish dish = dishRepository.findDishById(dishId, userId).orElseThrow(() -> new DishNotFoundException("Dish of id: " + dishId + " not found"));
+        return recipeIngredientService.getAllRecipeIngredients(dish.getRecipe());
     }
 
-
-         */
-    public List<DishListSimpleDTO> findDishesByTasteSpiciness(List<Spiciness> spiciness) {
-        return dishRepository.findAllByTaste_Spiciness(spiciness).stream()
-                .map(this::convertToStandardShowDto).collect(Collectors.toList());
-    }
 
         //# Dynamic filtering
-    public List<DishListSimpleDTO> findFilteredDishes(String name, List<Spiciness> spiciness, List<Ingredient> ingredients, String dominantTaste, FoodType foodType, Country country) {
-        Specification<Dish> spec = Specification.unrestricted();  //TODO dodac filtr na przepisy widoczne dla tego uzytkownika
+    public List<DishListSimpleDTO> findFilteredDishes(String name, List<Spiciness> spiciness, List<Ingredient> ingredients, String dominantTaste, FoodType foodType, Country country, Integer difficulty, Long userId) {
+
+        Specification<Dish> spec = DishSpecification.allForUser(userId);
 
         if (name != null) {
             spec = spec.and(DishSpecification.dishName(name));
@@ -148,10 +154,24 @@ public class DishService {
             spec = spec.and(DishSpecification.dishCountry(country));
         }
 
+        if (difficulty != null && difficulty > 0) {
+            spec = spec.and(DishSpecification.dishMaxDifficulty(difficulty));
+        }
+
         return dishRepository.findAll(spec).stream().map(this::convertToStandardShowDto).collect(Collectors.toList());
     }
 
-        // POJEDYNCZY PRZEPIS
+        // Show Dish by id and by name
+    public DishByIdDTO findDishWithId(Long dishId, Long userId) {
+        Dish dish = dishRepository.findDishById(dishId, userId).orElseThrow(() -> new DishNotFoundException("Dish of id: " + dishId + " not found"));
+        return convertToShowDishByIdDto(dish);
+    }
+
+    public DishByIdDTO findDishWithName(String name, Long userId) {
+        Dish dish = dishRepository.findDishByNameIgnoreCase(name, userId).orElseThrow(() -> new DishNotFoundException("Dish of name: " + name + " not found"));
+        return convertToShowDishByIdDto(dish);
+    }
+
 
 
     // ### metody pomocnicze ###
