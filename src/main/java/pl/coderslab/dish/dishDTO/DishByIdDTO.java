@@ -1,5 +1,7 @@
 package pl.coderslab.dish.dishDTO;
 
+
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import pl.coderslab.dish.enums.Country;
 import pl.coderslab.dish.enums.FoodType;
@@ -12,6 +14,7 @@ import pl.coderslab.dish.taste.TasteDTO;
 @NoArgsConstructor
 @Builder
 public class DishByIdDTO {
+    @Pattern(regexp = ".*\\S.*", message = "field can not be whitespace only")
     private String name;
     private Country country;
     private FoodType foodType;

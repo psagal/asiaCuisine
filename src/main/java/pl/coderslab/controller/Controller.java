@@ -1,5 +1,6 @@
 package pl.coderslab.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -106,7 +107,7 @@ public class Controller {
     // Dish updating
     @PutMapping("dish/update/{id}")
     public ResponseEntity<?> updateDish(@PathVariable Long id,
-                                        @RequestBody DishByIdDTO dishUpdateDTO
+                                        @Valid @RequestBody DishByIdDTO dishUpdateDTO
                                         ) {
         dishService.updateDish(id, USER_ID, dishUpdateDTO.getName(), dishUpdateDTO.getCountry(), dishUpdateDTO.getFoodType(), dishUpdateDTO.getImageUrl(), dishUpdateDTO.getRecipe(), dishUpdateDTO.getTaste());
         return ResponseEntity.status(HttpStatus.OK).body("Dish updated");

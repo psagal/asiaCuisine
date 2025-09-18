@@ -47,13 +47,25 @@ Accept: application/json
   }
 }
 
-### UPDATE dish to Hotteok
-PUT http://localhost:8080/dish/update/20
+### UPDATE dish WHITESPACE
+PUT http://localhost:8080/dish/update/23
 Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Hotteok",
+  "name": "   ",
+  "country": "KOREA",
+  "foodType": "VEGETARIAN",
+  "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Hotteok_in_Korea.jpg/640px-Hotteok_in_Korea.jpg"
+
+}
+
+### UPDATE dish name = null
+PUT http://localhost:8080/dish/update/23
+Content-Type: application/json
+Accept: application/json
+
+{
   "country": "KOREA",
   "foodType": "VEGETARIAN",
   "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Hotteok_in_Korea.jpg/640px-Hotteok_in_Korea.jpg"
