@@ -1,4 +1,4 @@
-package pl.coderslab;
+package pl.coderslab.controller;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -14,14 +14,11 @@ import pl.coderslab.dish.enums.Spiciness;
 import pl.coderslab.dish.ingredient.Ingredient;
 import pl.coderslab.dish.ingredient.IngredientDTO;
 import pl.coderslab.dish.ingredient.IngredientService;
-import pl.coderslab.dish.recipe.RecipeDTO;
 import pl.coderslab.dish.recipe.RecipeService;
 import pl.coderslab.dish.recipeIngredient.RecipeIngredientDTO;
 import pl.coderslab.dish.recipeIngredient.RecipeIngredientService;
-import pl.coderslab.dish.taste.TasteDTO;
 import pl.coderslab.dish.taste.TasteService;
 import pl.coderslab.exceptions.IngredientNotFoundException;
-import pl.coderslab.users.User;
 
 import java.util.ArrayList;
 import java.util.List;

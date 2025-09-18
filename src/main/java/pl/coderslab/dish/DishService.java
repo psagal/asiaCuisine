@@ -66,7 +66,7 @@ public class DishService {
                 .foodType(dish.getFoodType())
                 .imageUrl(dish.getImageUrl())
                 .recipe(recipeService.convertToDTO(dish.getRecipe()))
-                .taste(tasteService.convertTasteToDTO(dish.getTaste()))  //TODO Czy to jest OK ?
+                .taste(tasteService.convertTasteToDTO(dish.getTaste()))
                 .build();
     }
 

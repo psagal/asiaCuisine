@@ -1,6 +1,7 @@
 package pl.coderslab.dish;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import pl.coderslab.dish.enums.Country;
@@ -16,13 +17,18 @@ public class Dish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
     private String name;
+    @NotNull
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Recipe recipe;
+    @NotNull
     @Enumerated(EnumType.STRING)
     private Country country;
+    @NotNull
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Taste taste;
+    @NotNull
     @Enumerated(EnumType.STRING)
     private FoodType foodType;
     private String imageUrl;

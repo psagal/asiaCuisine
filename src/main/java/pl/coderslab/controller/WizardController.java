@@ -1,15 +1,14 @@
-package pl.coderslab;
+package pl.coderslab.controller;
 
 
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import pl.coderslab.dish.DishService;
-import pl.coderslab.dish.dishDTO.DishByIdDTO;
-import pl.coderslab.dish.dishDTO.DishWizardDto;
-import pl.coderslab.dish.dishDTO.DishWizardStep3DTO;
+import pl.coderslab.dish.dishDTO.*;
 import pl.coderslab.dish.ingredient.IngredientService;
 import pl.coderslab.dish.recipe.RecipeDTO;
 import pl.coderslab.dish.taste.TasteDTO;
@@ -30,14 +29,15 @@ public class WizardController {
     }
 
     @ModelAttribute("dishDraft")
-    public DishByIdDTO getDishDraft() {
+    public DishByIdDTO getDishDraft(HttpServletRequest request) {
+        request.getSession(true);  // wymuszenie utworzenia sesji na poczatku requesta
         return new DishByIdDTO();
     }
 
     // Step 1 -  basic dish information
     @PostMapping("/step1")
     public ResponseEntity<DishByIdDTO> step1(
-            @RequestBody DishWizardDto inputDto,
+            @Valid @RequestBody DishWizardStep1DTO inputDto,
             @ModelAttribute("dishDraft") DishByIdDTO dishDraft) {
 
         //System.out.println(dishDraft);
@@ -53,7 +53,7 @@ public class WizardController {
     // Step 2 - Taste of the dish information
     @PostMapping("/step2")
     public ResponseEntity<?> step2(
-            @RequestBody DishWizardDto inputDto,
+            @RequestBody TasteDTO inputDto, // DishWizardStep2DTO = TasteDTO
             @ModelAttribute("dishDraft") DishByIdDTO dishDraft) {
         //System.out.println(dishDraft);
         if (dishDraft.getName() == null) {
@@ -89,7 +89,7 @@ public class WizardController {
     // Step 4 - recipe instructions and saving the dish
     @PostMapping("/step4")
     public ResponseEntity<?> step4(
-            @RequestBody DishWizardDto inputDto,
+            @Valid @RequestBody DishWizardStep4DTO inputDto,
             @ModelAttribute("dishDraft") DishByIdDTO dishDraft,
             SessionStatus status
     ){

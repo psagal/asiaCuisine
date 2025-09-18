@@ -3,7 +3,7 @@ POST http://localhost:8080/create-dish/step1
 Content-Type: application/json
 
 {
-  "name": "Sun Pad Thai",
+  "name": "",
   "country": "THAILAND",
   "foodType": "GLUTEN_FREE",
   "imageUrl": "https://example.com/padthai.jpg"
@@ -34,7 +34,7 @@ POST http://localhost:8080/create-dish/step4
 Content-Type: application/json
 
 {
-  "description": "Soak noodles, stir-fry shrimp, add sauce and serve.",
+  "description": "Soak noodles",
   "difficulty": 2,
   "videoUrl": "https://example.com/padthai.mp4"
 }
