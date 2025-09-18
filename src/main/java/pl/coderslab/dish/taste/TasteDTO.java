@@ -12,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TasteDTO {
-    private List<String> dominantTastes;
-    @Pattern(regexp = ".*\\S.*", message = "field can not be whitespace only")
+    private List<@Pattern(regexp = ".*\\S.*", message = "field can not be whitespace only")String> dominantTastes;
     private Spiciness spiciness;
 }

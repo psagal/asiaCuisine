@@ -53,7 +53,7 @@ public class WizardController {
     // Step 2 - Taste of the dish information
     @PostMapping("/step2")
     public ResponseEntity<?> step2(
-            @RequestBody TasteDTO inputDto, // DishWizardStep2DTO = TasteDTO
+            @Valid @RequestBody TasteDTO inputDto, // DishWizardStep2DTO = TasteDTO
             @ModelAttribute("dishDraft") DishByIdDTO dishDraft) {
         //System.out.println(dishDraft);
         if (dishDraft.getName() == null) {
@@ -69,7 +69,7 @@ public class WizardController {
     // Step 3 - Recipe Ingredients with unit and amount
     @PostMapping("/step3")
     public ResponseEntity<?> step3(
-            @RequestBody DishWizardStep3DTO inputDto,
+            @Valid @RequestBody DishWizardStep3DTO inputDto,
             @ModelAttribute("dishDraft") DishByIdDTO dishDraft
             ) {
         if (dishDraft.getTaste() == null) {

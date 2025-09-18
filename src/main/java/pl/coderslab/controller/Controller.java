@@ -11,6 +11,7 @@ import pl.coderslab.dish.dishDTO.DishByIdDTO;
 import pl.coderslab.dish.dishDTO.DishListSimpleDTO;
 import pl.coderslab.dish.enums.Country;
 import pl.coderslab.dish.enums.FoodType;
+import pl.coderslab.dish.enums.IngredientCategory;
 import pl.coderslab.dish.enums.Spiciness;
 import pl.coderslab.dish.ingredient.Ingredient;
 import pl.coderslab.dish.ingredient.IngredientDTO;
@@ -124,14 +125,23 @@ public class Controller {
     public ResponseEntity<?> removeFavouriteDish(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(dishService.removeFromFavourites(id, USER_ID));
     }
+
+
     //all ingredients that user can display
     @GetMapping("/ingredients")
     public List<IngredientDTO> getIngredients() {
         return ingredientService.getAllIngredients(USER_ID);
     }
 
-    // TODO all ingredients added by user
+    @GetMapping("/ingredients/own")
+    public List<IngredientDTO> getUserOwnIngredients() {
+        return ingredientService.findAllIngredientsByUser(USER_ID);
+    }
 
+    @GetMapping("/ingredients/category/{category}")
+    public List<IngredientDTO> getIngredientsByCategory(@PathVariable IngredientCategory category) {
+        return ingredientService.findAllIngredientsByCategory(category, USER_ID);
+    }
 
     @PostMapping("/ingredients/add")
     public ResponseEntity<IngredientDTO> addIngredient(@RequestBody IngredientDTO newIngredient) {

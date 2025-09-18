@@ -86,19 +86,19 @@ public class IngredientService {
     }
 
 
-    // TODO Ingredients added by User -- do controllera
     public List<IngredientDTO> findAllIngredientsByUser(Long userId) {
         User user = userService.findById(userId);
         List<Ingredient> ingredients = ingredientRepository.findAllByUser(user);
         return convertListToIngredientDTO(ingredients);
     }
 
-    //TODO WYSWIETLIC BAZOWE SKLADNIKI -- do controllera
+    /*
     public List<IngredientDTO> findAllDefaultIngredients(){
         return convertListToIngredientDTO(ingredientRepository.findAllByIsUserCreatedFalse());
     }
 
-    //TODO Show ingredients by Category -- do controllera
+     */
+
     public List<IngredientDTO> findAllIngredientsByCategory(IngredientCategory category, Long userId) {
         List<Ingredient> ingredients = ingredientRepository.findAllByCategory(category, userId);
         return convertListToIngredientDTO(ingredients);

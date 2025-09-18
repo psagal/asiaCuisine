@@ -3,7 +3,7 @@ POST http://localhost:8080/create-dish/step1
 Content-Type: application/json
 
 {
-  "name": "",
+  "name": "name ",
   "country": "THAILAND",
   "foodType": "GLUTEN_FREE",
   "imageUrl": "https://example.com/padthai.jpg"
@@ -15,7 +15,7 @@ Content-Type: application/json
 
 {
   "spiciness": "MILD",
-  "dominantTastes": ["SAVORY","SWEET","SPICY"]
+  "dominantTastes": ["","SWEET","SPICY"]
 }
 
 ### Step 3

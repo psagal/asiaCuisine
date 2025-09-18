@@ -79,7 +79,11 @@ public class DishService {
         dish.setName(dishDto.getName());
         dish.setCountry(dishDto.getCountry());
         dish.setFoodType(dishDto.getFoodType());
-        dish.setImageUrl(dishDto.getImageUrl());
+        if (dishDto.getImageUrl() != null) {
+            dish.setImageUrl(dishDto.getImageUrl());
+        } else {
+            dish.setImageUrl("no_image_url");
+        }
 
         Recipe recipe = recipeService.convertToRecipe(dishDto.getRecipe(), userId);
         dish.setRecipe(recipe);

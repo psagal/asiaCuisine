@@ -14,7 +14,9 @@ import pl.coderslab.dish.enums.FoodType;
 public class DishWizardStep1DTO {
     @NotBlank
     private String name;
+    @NotNull
     private Country country;
+    @NotNull
     private FoodType foodType;
     private String imageUrl;
 }
