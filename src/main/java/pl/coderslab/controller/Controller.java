@@ -5,7 +5,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.dish.Dish;
 import pl.coderslab.dish.DishService;
 import pl.coderslab.dish.dishDTO.DishByIdDTO;
 import pl.coderslab.dish.dishDTO.DishListSimpleDTO;
@@ -16,10 +15,7 @@ import pl.coderslab.dish.enums.Spiciness;
 import pl.coderslab.dish.ingredient.Ingredient;
 import pl.coderslab.dish.ingredient.IngredientDTO;
 import pl.coderslab.dish.ingredient.IngredientService;
-import pl.coderslab.dish.recipe.RecipeService;
 import pl.coderslab.dish.recipeIngredient.RecipeIngredientDTO;
-import pl.coderslab.dish.recipeIngredient.RecipeIngredientService;
-import pl.coderslab.dish.taste.TasteService;
 import pl.coderslab.exceptions.IngredientNotFoundException;
 
 import java.util.ArrayList;
@@ -30,22 +26,17 @@ public class Controller {
     private final Long USER_ID = 1L;
 
     private final DishService dishService;
-    private final RecipeService recipeService;
     private final IngredientService ingredientService;
-    private final RecipeIngredientService recipeIngredientService;
-    private final TasteService tasteService;
 
-    public Controller ( DishService dishService, RecipeService recipeService, IngredientService ingredientService, RecipeIngredientService recipeIngredientService, TasteService tasteService) {
+
+    public Controller ( DishService dishService, IngredientService ingredientService) {
         this.dishService = dishService;
-        this.recipeService = recipeService;
         this.ingredientService = ingredientService;
-        this.recipeIngredientService = recipeIngredientService;
-        this.tasteService = tasteService;
     }
 
 
     @GetMapping("/dishes")
-    public List<Dish> getDishes() {
+    public List<DishListSimpleDTO> getDishes() {
         return dishService.findAll();
     }
     
@@ -75,10 +66,10 @@ public class Controller {
         if (ingredients != null && ingredients.size() > 0) {
             ingredients.stream()
                     .map(String::toLowerCase)
-                    .forEach(i -> {
+                    .forEach(i ->
                         ingredientsList.add(ingredientService.findIngredientByName(i, USER_ID)
-                                .orElseThrow(() -> new IngredientNotFoundException("Ingredient " + i + " not found")));
-                    });
+                                .orElseThrow(() -> new IngredientNotFoundException("Ingredient " + i + " not found")))
+                    );
         }
         return dishService.findFilteredDishes(name, spice, ingredientsList, taste, foodType, country, difficulty, USER_ID);
     }
@@ -144,7 +135,10 @@ public class Controller {
     }
 
     @PostMapping("/ingredients/add")
-    public ResponseEntity<IngredientDTO> addIngredient(@RequestBody IngredientDTO newIngredient) {
+    public ResponseEntity<?> addIngredient(@RequestBody IngredientDTO newIngredient) {
+        if(newIngredient.getName() == null || newIngredient.getName().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Ingredient must have a name");
+        }
         ingredientService.addIngredient(newIngredient, USER_ID);
         return ResponseEntity.status(HttpStatus.CREATED).body(newIngredient);
     }
@@ -162,15 +156,15 @@ public class Controller {
     }
 
     @PutMapping("/ingredients/update/{id}")
-    public ResponseEntity<?> updateIngredient(@PathVariable Long id, @RequestBody IngredientDTO ingredientData) {
+    public ResponseEntity<String> updateIngredient(@PathVariable Long id, @Valid @RequestBody IngredientDTO ingredientData) {
         ingredientService.updateIngredient(ingredientData, id, USER_ID);
         return ResponseEntity.status(HttpStatus.OK).body("Ingredient updated");
     }
 
     // showing all ingredients for chosen dish (from the list)
-    @GetMapping("/ingrediets/{dish_id}")
-    public List<RecipeIngredientDTO> getIngredientsByDishId(@PathVariable Long dish_id) {
-        return dishService.getAllDishIngredients(dish_id, USER_ID);
+    @GetMapping("/ingrediets/{dishId}")
+    public List<RecipeIngredientDTO> getIngredientsByDishId(@PathVariable Long dishId) {
+        return dishService.getAllDishIngredients(dishId, USER_ID);
     }
 
 

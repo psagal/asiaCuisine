@@ -6,7 +6,6 @@ import pl.coderslab.dish.recipe.Recipe;
 import pl.coderslab.exceptions.IngredientNotFoundException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class RecipeIngredientService {
@@ -28,13 +27,12 @@ public class RecipeIngredientService {
 
     public RecipeIngredient convertToEntity(RecipeIngredientDTO recipeIngredientDTO, Recipe recipe, Long userId) {
         RecipeIngredient recipeIngredient = new RecipeIngredient();
-        recipeIngredient.setIngredient( ingredientService.findIngredientByName(recipeIngredientDTO.getName(),userId).orElseThrow(() -> new IngredientNotFoundException(recipeIngredientDTO.getName() + " not found")));
+        recipeIngredient.setIngredient(ingredientService.findIngredientByName(recipeIngredientDTO.getName(), userId).orElseThrow(() -> new IngredientNotFoundException(recipeIngredientDTO.getName() + " not found")));
         recipeIngredient.setAmount(recipeIngredientDTO.getAmount());
         recipeIngredient.setUnit(recipeIngredientDTO.getUnit());
         recipeIngredient.setRecipe(recipe);
         return recipeIngredient;
     }
-
 
 
     public List<RecipeIngredientDTO> convertToListDTO(List<RecipeIngredient> recipeIngredients) {
@@ -47,14 +45,4 @@ public class RecipeIngredientService {
         return convertToListDTO(recipeIngredients);
     }
 
-
-
-
-//    public RecipeIngredientDTO makeRecipeIngredientDTO(String name, String unit, Double amount ) {
-//        RecipeIngredientDTO recipeIngredientDTO = new RecipeIngredientDTO();
-//        recipeIngredientDTO.setName(name);
-//        recipeIngredientDTO.setUnit(unit);
-//        recipeIngredientDTO.setAmount(amount);
-//        return recipeIngredientDTO;
-//    }
 }

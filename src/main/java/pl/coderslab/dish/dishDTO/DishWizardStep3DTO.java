@@ -1,6 +1,6 @@
 package pl.coderslab.dish.dishDTO;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import pl.coderslab.dish.recipeIngredient.RecipeIngredientDTO;
 
@@ -12,6 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DishWizardStep3DTO {
-    @NotNull
+    @NotEmpty
     private List<RecipeIngredientDTO> ingredients;
 }

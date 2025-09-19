@@ -3,24 +3,19 @@ package pl.coderslab.dish.recipe;
 import org.springframework.stereotype.Service;
 import pl.coderslab.dish.ingredient.Ingredient;
 import pl.coderslab.dish.ingredient.IngredientRepository;
-import pl.coderslab.dish.ingredient.IngredientService;
 import pl.coderslab.dish.recipeIngredient.RecipeIngredient;
-import pl.coderslab.dish.recipeIngredient.RecipeIngredientDTO;
 import pl.coderslab.dish.recipeIngredient.RecipeIngredientService;
 import pl.coderslab.exceptions.IngredientNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class RecipeService {
-    private final RecipeRepository recipeRepository;
     private final RecipeIngredientService recipeIngredientService;
     private final IngredientRepository ingredientRepository;
 
-    public RecipeService(RecipeRepository recipeRepository, RecipeIngredientService recipeIngredientService, IngredientRepository ingredientRepository) {
-        this.recipeRepository = recipeRepository;
+    public RecipeService( RecipeIngredientService recipeIngredientService, IngredientRepository ingredientRepository) {
         this.recipeIngredientService = recipeIngredientService;
 
         this.ingredientRepository = ingredientRepository;
@@ -66,9 +61,7 @@ public class RecipeService {
         return recipe;
     }
 
-    //TODO WYSWIETLIC PRZEPIS O DANYM ID
 
-    //TODO WYSWIETLIC SKLADNIKI DO DANEGO PRZEPISU
 
 
 

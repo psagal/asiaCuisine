@@ -1,6 +1,7 @@
 package pl.coderslab.dish.dishDTO;
 
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import pl.coderslab.dish.enums.Country;
@@ -19,7 +20,9 @@ public class DishByIdDTO {
     private Country country;
     private FoodType foodType;
     private String imageUrl;
+    @Valid
     private RecipeDTO recipe;
+    @Valid
     private TasteDTO taste;
 
 }

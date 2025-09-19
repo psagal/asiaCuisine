@@ -1,5 +1,5 @@
 ### UPDATE dish to Hotteok
-PUT http://localhost:8080/dish/update/20
+PUT http://localhost:8080/dish/update/18
 Content-Type: application/json
 Accept: application/json
 
@@ -26,7 +26,7 @@ Accept: application/json
 }
 
 ### UPDATE dish to Hotteok
-PUT http://localhost:8080/dish/update/20
+PUT http://localhost:8080/dish/update/18
 Content-Type: application/json
 Accept: application/json
 
@@ -37,12 +37,12 @@ Accept: application/json
   "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Hotteok_in_Korea.jpg/640px-Hotteok_in_Korea.jpg",
   "recipe": {
     "difficulty": 2,
-    "description": "Description pending",
+    "description": "",
     "videoUrl": "https://www.youtube.com/watch?v=abc123xyz"
 
   },
   "taste": {
-    "dominantTastes": ["SWEET", "NUTTY", "SPICY"],
+    "dominantTastes": ["", "NUTTY", "SPICY"],
     "spiciness": "MILD"
   }
 }
@@ -61,7 +61,7 @@ Accept: application/json
 }
 
 ### UPDATE dish name = null
-PUT http://localhost:8080/dish/update/23
+PUT http://localhost:8080/dish/update/18
 Content-Type: application/json
 Accept: application/json
 

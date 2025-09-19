@@ -40,12 +40,10 @@ public class WizardController {
             @Valid @RequestBody DishWizardStep1DTO inputDto,
             @ModelAttribute("dishDraft") DishByIdDTO dishDraft) {
 
-        //System.out.println(dishDraft);
         dishDraft.setName(inputDto.getName());
         dishDraft.setCountry(inputDto.getCountry());
         dishDraft.setFoodType(inputDto.getFoodType());
         dishDraft.setImageUrl(inputDto.getImageUrl());
-        //System.out.println(dishDraft);
 
         return ResponseEntity.ok(dishDraft);
     }
@@ -55,7 +53,6 @@ public class WizardController {
     public ResponseEntity<?> step2(
             @Valid @RequestBody TasteDTO inputDto, // DishWizardStep2DTO = TasteDTO
             @ModelAttribute("dishDraft") DishByIdDTO dishDraft) {
-        //System.out.println(dishDraft);
         if (dishDraft.getName() == null) {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Step 1 is not done, please start again");
         }
@@ -71,7 +68,7 @@ public class WizardController {
     public ResponseEntity<?> step3(
             @Valid @RequestBody DishWizardStep3DTO inputDto,
             @ModelAttribute("dishDraft") DishByIdDTO dishDraft
-            ) {
+    ) {
         if (dishDraft.getTaste() == null) {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("Step 2 is not done, please start again");
         }
@@ -92,7 +89,7 @@ public class WizardController {
             @Valid @RequestBody DishWizardStep4DTO inputDto,
             @ModelAttribute("dishDraft") DishByIdDTO dishDraft,
             SessionStatus status
-    ){
+    ) {
         if (dishDraft.getRecipe() == null) {
             return ResponseEntity.status(HttpStatus.GONE).body("Step 3 is not done, please start again");
         }
@@ -105,8 +102,6 @@ public class WizardController {
         status.setComplete();
         return ResponseEntity.ok(dishDraft);
     }
-
-
 
 
 }

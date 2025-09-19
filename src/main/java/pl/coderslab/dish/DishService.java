@@ -138,9 +138,9 @@ public class DishService {
                 List<RecipeIngredient> ingredients = dish.getRecipe().getRecipeIngredients();
                 ingredients.clear();
 
-                recipeDTO.getRecipeIngredients().forEach(elementDTO -> {
-                    ingredients.add(recipeIngredientService.convertToEntity(elementDTO, dish.getRecipe(), userId));
-                });
+                recipeDTO.getRecipeIngredients().forEach(elementDTO ->
+                    ingredients.add(recipeIngredientService.convertToEntity(elementDTO, dish.getRecipe(), userId))
+                );
                 dish.getRecipe().setRecipeIngredients(ingredients);
             }
         }
@@ -161,7 +161,7 @@ public class DishService {
         User user = findUserById(userId);
         List<Dish> favourites = user.getFavouriteDishes();
         for(Dish favourite : favourites){
-            if(favourite.getId() == dishId){
+            if(favourite.getId().equals(dishId)){
                 return "dish already added to favourites";
             }
         }
@@ -177,7 +177,7 @@ public class DishService {
         User user = findUserById(userId);
         List<Dish> favourites = user.getFavouriteDishes();
         for(Dish favourite : favourites){
-            if(favourite.getId() == dishId){
+            if(favourite.getId().equals(dishId)){
                 favourites.remove(favourite);
                 userRepository.save(user);
                 return "dish removed from favourites";
@@ -188,15 +188,15 @@ public class DishService {
     }
 
     // ### SHOWING INFORMATION ###
-    public List<Dish> findAll() {
+    public List<DishListSimpleDTO> findAll() {
 
-        return dishRepository.findAllByIsUserCreatedFalse();
+        return dishRepository.findAllByIsUserCreatedFalse().stream().map(this::convertToStandardShowDto).toList();
     }
 
         // User Related Dishes
     public List<DishListSimpleDTO> findFavouriteDishes(Long userId) {
         User user = findUserById(userId);
-        return user.getFavouriteDishes().stream().map(dish -> convertToStandardShowDto(dish)).collect(Collectors.toList());
+        return user.getFavouriteDishes().stream().map(this::convertToStandardShowDto).collect(Collectors.toList());
     }
 
     public List<DishListSimpleDTO> findOwnDishes(Long userId) {
@@ -221,7 +221,7 @@ public class DishService {
             spec = spec.and(DishSpecification.dishName(name));
         }
 
-        if (spiciness != null) {
+        if (spiciness != null && !spiciness.isEmpty()) {
             spec = spec.and(DishSpecification.dishSpiciness(spiciness));
         }
 
@@ -245,7 +245,7 @@ public class DishService {
             spec = spec.and(DishSpecification.dishMaxDifficulty(difficulty));
         }
 
-        return dishRepository.findAll(spec).stream().map(this::convertToStandardShowDto).collect(Collectors.toList());
+        return dishRepository.findAll(spec).stream().map(this::convertToStandardShowDto).toList();
     }
 
         // Show Dish by id and by name
@@ -276,7 +276,7 @@ public class DishService {
 
     public Long randomBaseDishId(){
         List<Long> ids = new ArrayList<>();
-        findAll().forEach(dish -> ids.add(dish.getId()));
+        dishRepository.findAllByIsUserCreatedFalse().forEach(dish -> ids.add(dish.getId()));
 
         Random random = new Random();
         return ids.get(random.nextInt(ids.size()));

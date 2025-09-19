@@ -92,12 +92,6 @@ public class IngredientService {
         return convertListToIngredientDTO(ingredients);
     }
 
-    /*
-    public List<IngredientDTO> findAllDefaultIngredients(){
-        return convertListToIngredientDTO(ingredientRepository.findAllByIsUserCreatedFalse());
-    }
-
-     */
 
     public List<IngredientDTO> findAllIngredientsByCategory(IngredientCategory category, Long userId) {
         List<Ingredient> ingredients = ingredientRepository.findAllByCategory(category, userId);

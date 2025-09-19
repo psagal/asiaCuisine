@@ -3,10 +3,9 @@ POST http://localhost:8080/create-dish/step1
 Content-Type: application/json
 
 {
-  "name": "name ",
+  "name": " ",
   "country": "THAILAND",
-  "foodType": "GLUTEN_FREE",
-  "imageUrl": "https://example.com/padthai.jpg"
+  "foodType": "GLUTEN_FREE"
 }
 
 ### Step 2
@@ -15,7 +14,7 @@ Content-Type: application/json
 
 {
   "spiciness": "MILD",
-  "dominantTastes": ["","SWEET","SPICY"]
+  "dominantTastes": ["SWEET","SPICY"]
 }
 
 ### Step 3
@@ -34,7 +33,7 @@ POST http://localhost:8080/create-dish/step4
 Content-Type: application/json
 
 {
-  "description": "Soak noodles",
+  "description": "Soak ",
   "difficulty": 2,
   "videoUrl": "https://example.com/padthai.mp4"
 }
