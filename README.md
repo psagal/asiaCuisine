@@ -2,7 +2,7 @@ AsiaCuisine is Backend Java application to discover and create own recipes from 
 **Technnologies**: Java 17, Spring Boot 3, Maven, MySql <br>
 <br>
 <br>
-### Features: ### <br> 
+### Features:  <br> 
 *Browse Recipes & Ingredients <br> 
 *Add / Update / Delete your own Recipe<br> 
 *Add / Update / Delete ingredients<br> 
