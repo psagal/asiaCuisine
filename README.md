@@ -1,15 +1,15 @@
-AsiaCuisine is Backend Java application to discover and create own recipes from Asia Cuisie. 
-**Technnologies**: Java 17, Spring Boot 3, Maven, MySql
-
-
-### Features: ###
-*Browse Recipes & Ingredients
-*Add / Update / Delete your own Recipe
-*Add / Update / Delete ingredients
-*Filter ingredients with category
-*Filter recipes with dynamic filters ( JPA Specification )
-*Wizard creator for dishes 
-*Random dish feature
+AsiaCuisine is Backend Java application to discover and create own recipes from Asia Cuisie. <br>
+**Technnologies**: Java 17, Spring Boot 3, Maven, MySql <br>
+<br>
+<br>
+### Features: ### <br> 
+*Browse Recipes & Ingredients <br> 
+*Add / Update / Delete your own Recipe<br> 
+*Add / Update / Delete ingredients<br> 
+*Filter ingredients with category<br> 
+*Filter recipes with dynamic filters ( JPA Specification )<br> 
+*Wizard creator for dishes <br> 
+*Random dish feature<br> 
 
 
 
